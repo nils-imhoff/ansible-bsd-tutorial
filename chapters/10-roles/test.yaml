@@ -1,0 +1,8 @@
+---
+- name: Test indentation
+  hosts: freebsd_hosts
+  become: true
+  remote_user: ansible
+  gather_facts: false
+  tasks:
+      

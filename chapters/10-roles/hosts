@@ -1,0 +1,16 @@
+[freebsd_hosts]
+freebsd00.d4d1.de
+
+[openbsd_hosts]
+openbsd00.d4d1.de
+
+[ctrlhost]
+localhost
+
+[freebsd:children]
+ctrlhost
+freebsd_hosts
+
+[webservers:children]
+openbsd_hosts
+freebsd_hosts

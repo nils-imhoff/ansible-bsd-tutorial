@@ -1,0 +1,14 @@
+- name: 'Manage Disk File'
+  hosts: freebsd_hosts
+  become: true
+  remote_user: ansible
+  gather_facts: false
+  vars:
+    disk_file: '/root/disk0'
+    md_unit: 'md100'
+  tasks:
+    - name: 'Install packages'
+      ansible.builtin.user:
+        name: tutorial
+        state: present
+        shell: '/bin/sh'

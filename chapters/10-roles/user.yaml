@@ -1,0 +1,12 @@
+---
+- name: 'Manage User Account'
+  hosts: all
+  become: true
+  remote_user: ansible
+  gather_facts: false
+  tasks:
+    - name 'Manage User'
+      user:
+       name: "tutorial"
+       state: 'present'
+       shell: '/bin/bash' 
