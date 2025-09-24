@@ -1,7 +1,7 @@
 ---
 
 - name: Install PHP application via a role
-  hosts: webservers
+  hosts: freebsd_hosts
   remote_user: ansible
   become: true
   vars:

@@ -2,7 +2,7 @@
 
 - name: Install php
   package:
-    name: php
+    name: php83
     state: present
 
 - name: Install nginx
@@ -10,10 +10,17 @@
     name: nginx
     state: present
 
+- name: 'Deploy nginx configuration for FreeBSD'
+  template:
+    src: nginx-freebsd.conf.j2
+    dest: /usr/local/etc/nginx/nginx.conf
+    backup: yes
+  notify: restart nginx
+
 - name: Copy application
   template:
     src: "{{ item }}"
-    dest: "/var/www/html/{{ item }}"
+    dest: "/usr/local/www/nginx/index.php"
   loop:
     - roles-example.php
   notify:
