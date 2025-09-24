@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "rimraf public && npm run -s deck",
-    "deck": "marp --no-stdin course_intro_slides.md -o public/index.html",
+    "deck": "marp --no-stdin ansible-tutorial-slides.md -o public/index.html",
     "start": "marp -ps .",
     "vercel-build": "npm i puppeteer --no-save && MARP_USER=root CHROME_PATH=$(node -e \"console.log(require('puppeteer').executablePath())\") npm run build"
   },
