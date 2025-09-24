@@ -5,17 +5,18 @@
     name: php83
     state: present
 
-- name: Install php-fpm
-  package:
-    name: php83-fpm
-    state: present
-
 - name: Install nginx
   package:
     name: nginx
     state: present
 
-- name: 'Deploy nginx configuration for FreeBSD'
+- name: Enable php_fpm
+  lineinfile:
+    path: /etc/rc.conf
+    line: 'php_fpm_enable=YES'
+    create: yes
+
+- name: Deploy nginx configuration for FreeBSD
   template:
     src: nginx-freebsd.conf.j2
     dest: /usr/local/etc/nginx/nginx.conf
@@ -33,7 +34,7 @@
 
 - name: Enable and start php-fpm
   service:
-    name: php-fpm
+    name: php_fpm
     enabled: yes
     state: started
 
