@@ -1,0 +1,51 @@
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       /usr/pkg/etc/nginx/mime.types;
+    default_type  application/octet-stream;
+    
+    # Security headers
+    add_header X-Content-Type-Options nosniff;
+    add_header X-Frame-Options DENY;
+    add_header X-XSS-Protection "1; mode=block";
+    
+    sendfile        on;
+    tcp_nopush      on;
+    tcp_nodelay     on;
+    keepalive_timeout  65;
+    
+    # Gzip compression
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+    
+    server {
+        listen       {{ web_port }};
+        server_name  {{ server_name }};
+        
+        # Document root for NetBSD
+        root   /usr/pkg/share/nginx/html;
+        index  index.html index.htm;
+        
+        # Security: hide nginx version
+        server_tokens off;
+        
+        location / {
+            try_files $uri $uri/ =404;
+        }
+        
+        # Custom error pages
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/pkg/share/nginx/html;
+        }
+        
+        # Security: deny access to hidden files
+        location ~ /\. {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+    }
+}

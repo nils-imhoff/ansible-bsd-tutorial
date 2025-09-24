@@ -1,0 +1,10 @@
+---
+
+- name: Copy application
+  template:
+    src: "{{ item }}"
+    dest: /var/www/html/
+  loop:
+    - roles-example.php
+  notify:
+    - restart nginx

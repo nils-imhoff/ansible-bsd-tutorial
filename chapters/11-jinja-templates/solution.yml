@@ -1,0 +1,39 @@
+---
+- name: Install and Configure Web Servers
+  hosts: webservers
+  become: true
+  remote_user: ansible
+  gather_facts: true
+  vars:
+    file_version: 1.0
+  tasks:
+    - name: 'Install nginx on FreeBSD'
+      package:
+        name: nginx
+        state: present
+
+    - name: 'Enable nginx on FreeBSD'
+      lineinfile:
+        path: /etc/rc.conf
+        line: 'nginx_enable="YES"'
+        create: yes
+      when: ansible_os_family == "FreeBSD"
+
+    - name: 'Enable nginx on NetBSD'
+      lineinfile:
+        path: /etc/rc.conf
+        line: 'nginx=YES'
+        create: yes
+      when: ansible_os_family == "NetBSD"
+
+    - name: 'Start nginx service'
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  - name: 'install index'
+      template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+        mode: 0777

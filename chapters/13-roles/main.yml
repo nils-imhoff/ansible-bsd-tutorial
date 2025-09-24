@@ -1,0 +1,16 @@
+---
+
+- name: Install PHP application via a role
+  hosts: webservers
+  remote_user: ansible
+  become: true
+  vars:
+    tutorial_id: "QE8DWT"
+    tutorial_name: "Ansible Workshop"
+    tutorial_year: "{{ lookup('ansible.builtin.pipe', 'date +%Y') }}"
+  roles:
+    - php-app
+  tasks:
+
+    - debug:
+        msg: "The URL is: http://{{ ansible_fqdn | default(inventory_hostname) }}/roles-example.php"
