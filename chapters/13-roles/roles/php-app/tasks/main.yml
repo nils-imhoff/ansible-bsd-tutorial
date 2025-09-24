@@ -5,6 +5,11 @@
     name: php83
     state: present
 
+- name: Install php-fpm
+  package:
+    name: php83-fpm
+    state: present
+
 - name: Install nginx
   package:
     name: nginx
@@ -25,3 +30,15 @@
     - roles-example.php
   notify:
     - restart nginx
+
+- name: Enable and start php-fpm
+  service:
+    name: php-fpm
+    enabled: yes
+    state: started
+
+- name: Enable and start nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: started
