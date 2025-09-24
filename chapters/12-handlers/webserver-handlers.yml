@@ -1,6 +1,7 @@
 ---
 - name: Web Server Configuration with Handlers
-  hosts: bsd_servers
+  hosts: webservers
+  remote_user: ansible
   become: true
   vars:
     web_port: 80

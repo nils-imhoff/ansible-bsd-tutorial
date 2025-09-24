@@ -32,8 +32,8 @@
         state: started
         enabled: yes
 
-  - name: 'install index'
+    - name: 'install index'
       template:
         src: index.html.j2
         dest: /var/www/html/index.html
-        mode: 0777
+        mode: '0777'

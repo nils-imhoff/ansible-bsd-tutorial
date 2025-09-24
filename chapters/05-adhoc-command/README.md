@@ -8,7 +8,7 @@ ansible server -m ping
 ansible server -m raw -a '/usr/bin/uptime'
 ansible server -m shell -a 'python3 -V'
 ansible all -a 'whoami'
-MYVAR='myvalue;ls -la /etc/hosts'
+setenv MYVAR 'myvalue;ls -la /etc/hosts'
 echo $MYVAR
 ansible freebsd-hosts -m command -a "echo $MYVAR"
 ansible freebsd-hosts -m shell -a "echo $MYVAR" 

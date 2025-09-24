@@ -1,9 +1,19 @@
 ---
 
+- name: Install php
+  package:
+    name: php
+    state: present
+
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+
 - name: Copy application
   template:
     src: "{{ item }}"
-    dest: /var/www/html/
+    dest: "/var/www/html/{{ item }}"
   loop:
     - roles-example.php
   notify:

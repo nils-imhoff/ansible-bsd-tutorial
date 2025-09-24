@@ -1,7 +1,7 @@
-[freebsd-hosts]
+[freebsd_hosts]
 freebsd0x.d4d1.de
 
-[openbsd-hosts]
+[openbsd_hosts]
 openbsd0x.d4d1.de
 
 [ctrlhost]
@@ -9,8 +9,8 @@ localhost
 
 [freebsd:children]
 ctrlhost
-freebsd-host
+freebsd_hosts
 
 [webservers:children]
-openbsd-hosts
-freebsd-host
+openbsd_hosts
+freebsd_hosts

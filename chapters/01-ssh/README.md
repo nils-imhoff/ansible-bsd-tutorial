@@ -33,7 +33,7 @@ ssh-keygen -t ed25519 -C "nick@example.com"
 ## Add the ssh key to the ssh-agent
 
 ```bash
-$ eval "$(ssh-agent -s)"
+$ eval `ssh-agent -c`
 > Agent pid 59566
 ```
 
