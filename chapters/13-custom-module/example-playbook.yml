@@ -1,0 +1,40 @@
+---
+- name: Custom BSD Service Module Example
+  hosts: openbsd_hosts
+  become: true
+  remote_user: ansible
+  become_method: doas
+  gather_facts: no
+  
+  tasks:
+    - name: Start SSH service
+      openbsd_service:
+        name: sshd
+        state: started
+        enabled: true
+      register: ssh_result
+    
+    - name: Display SSH service status
+      debug:
+        var: ssh_result
+        
+    - name: Restart Nginx service
+      openbsd_service:
+        name: nginx
+        state: restarted
+      register: nginx_result
+    
+    - name: Display Nginx service status
+      debug:
+        var: nginx_result
+    
+    - name: Enable and start PostgreSQL
+      openbsd_service:
+        name: postgresql
+        state: started
+        enabled: true
+      register: postgres_result
+    
+    - name: Display PostgreSQL service status
+      debug:
+        var: postgres_result

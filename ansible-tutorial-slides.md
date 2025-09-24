@@ -52,12 +52,12 @@ code {
 
 ## Agenda
 
-1. **Introduction and Setup** (60 min)
-2. **Introduction to Ansible and First Steps** (60 min)
-3. **Inventory, Variables and Playbooks** (90 min)
-4. **Roles and Advanced Concepts** (90 min)
-5. **Security, Vaults and Best Practices** (60 min)
-6. **Real-world Project and Troubleshooting** (60 min)
+1. **Introduction and Setup**
+2. **Introduction to Ansible and First Steps**
+3. **Inventory, Variables and Playbooks**
+4. **Roles and Advanced Concepts**
+5. **Vaults and Best Practices**
+6. **Custom Modules and Troubleshooting**
 
 ---
 
@@ -191,7 +191,7 @@ Please clone it:
 git clone https://github.com/nils-imhoff/ansible-bsd-tutorial.git
 ```
 
-The exercises are located in the `exercises/` subdirectory.
+The example code are located in the `chapters/` subdirectory.
 
 ---
 
@@ -512,17 +512,6 @@ package_manager=pkg
 
 ---
 
-## Exercise 3
-
-Now web servers will be installed and configured using BSD-specific package managers. We'll demonstrate differences between FreeBSD, OpenBSD, and NetBSD package management.
-
-You'll get output like:
-> "The URL is: <http://xxx.xxx.xxx.xxx/>"
-
-This allows you to see a simple web page served by each BSD system.
-
----
-
 ## Playbooks Introduction
 
 **Playbooks** are Ansible's configuration, deployment, and orchestration language. They describe a policy you want your remote systems to enforce.
@@ -580,10 +569,6 @@ handlers:
 ```
 
 ---
-
-## Exercise 7
-
-In Exercise 7, we pass the variable `year` via the command line.
 
 ## Loops and Conditionals
 
@@ -772,6 +757,33 @@ Roles are an older method. They rely on a predefined directory structure and can
 
 ---
 
+## Lookup Plugins
+
+- **External sources** can provide variables for Ansible playbooks.
+- Ansible uses **lookups** to query these sources.
+- Supported sources include:
+  - Text files
+  - JSON files
+  - Environment variables
+  - Redis
+  - DNS
+  - Jinja2 templates
+  - MongoDB databases
+  - *(and many more via plugins)*
+
+---
+
+## Lookup Syntax
+
+```yaml
+lookup(lookup-type, variable-to-lookup or command-to-execute)
+```
+
+- Example: Retrieve the `HOME` environment variable
+  ```yaml
+  lookup('env', 'HOME')
+  ```
+---
 ## Ansible Vault and Security
 
 **Ansible Vault** encrypts sensitive data:
@@ -861,6 +873,172 @@ ansible-playbook --check playbook.yml
 
 ---
 
+## Custom Modules
+
+---
+
+## Custom Modules Introduction
+
+**Custom Modules** extend Ansible with specific functionality:
+
+- **When to use?**
+  - No suitable standard module available
+  - Specific BSD features needed
+  - Managing proprietary software
+  - Performance-optimized solutions
+
+- **Advantages:**
+  - Reusable across different playbooks
+  - Consistent API for complex operations
+  - Better error handling
+  - Idempotency guaranteed
+
+---
+
+## Custom Module Structure
+
+**Basic structure of an Ansible module:**
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from ansible.module_utils.basic import AnsibleModule
+import subprocess
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            name=dict(type='str', required=True),
+            state=dict(type='str', choices=['started', 'stopped'], required=True)
+        ),
+        supports_check_mode=True
+    )
+    
+    # Module logic here
+    
+    module.exit_json(changed=True, msg="Operation completed")
+
+if __name__ == '__main__':
+    main()
+```
+
+---
+
+## Custom Module Best Practices
+
+**Important principles for Custom Modules:**
+
+- **Idempotency**: Multiple execution without side effects
+- **Check Mode**: `--check` must be supported
+- **Error Handling**: Clear error messages with `module.fail_json()`
+- **Return Values**: Structured return values
+- **Documentation**: Comprehensive docstrings and comments
+
+**Example for error handling:**
+
+```python
+try:
+    result = subprocess.run(command, check=True, capture_output=True)
+except subprocess.CalledProcessError as e:
+    module.fail_json(
+        msg=f"Command failed: {command}",
+        rc=e.returncode,
+        stdout=e.stdout,
+        stderr=e.stderr
+    )
+```
+
+---
+
+## BSD Service Module Example
+
+**Practical example: OpenBSD Service Management**
+
+```python
+def get_service_status(module, service_name):
+    """Check if a service is running"""
+    exists_cmd = f"rcctl ls all | grep -q '^{service_name}$'"
+    exists_result = run_command(module, exists_cmd)
+    service_exists = exists_result['rc'] == 0
+    
+    if not service_exists:
+        return {
+            'exists': False,
+            'enabled': False,
+            'running': False
+        }
+    
+    # Check enabled and running status
+    enabled_cmd = f"rcctl ls on | grep -q '^{service_name}$'"
+    status_cmd = f"rcctl check {service_name}"
+    
+    return {
+        'exists': True,
+        'enabled': run_command(module, enabled_cmd)['rc'] == 0,
+        'running': run_command(module, status_cmd)['rc'] == 0
+    }
+```
+
+---
+
+## Using Custom Modules
+
+**Using Custom Module in Playbook:**
+
+```yaml
+---
+- name: Custom BSD Service Module Example
+  hosts: openbsd_hosts
+  become: true
+  
+  tasks:
+    - name: Start SSH service
+      openbsd_service:
+        name: sshd
+        state: started
+        enabled: true
+      register: ssh_result
+    
+    - name: Display service status
+      debug:
+        var: ssh_result
+```
+
+**Place module in `library/` directory:**
+
+```
+ansible-project/
+├── library/
+│   └── openbsd_service.py
+├── playbooks/
+└── inventory/
+```
+
+---
+
+## Module Testing and Validation
+
+**Important tests for Custom Modules:**
+
+- **Syntax Check**: `ansible-playbook --syntax-check`
+- **Check Mode**: `ansible-playbook --check`
+- **Idempotency**: Multiple execution without changes
+- **Error Cases**: Test invalid parameters
+- **Edge Cases**: Cover boundary conditions
+
+**Debugging:**
+
+```bash
+# Verbose Output
+ansible-playbook -vvv playbook.yml
+
+# Test single module
+ansible localhost -m openbsd_service -a "name=sshd state=started"
+```
+
+---
+
 ## BSD Package Management
 
 Different BSD systems use different package managers:
@@ -913,3 +1091,4 @@ Contact me:
 - NetBSD Guide: [https://netbsd.org/docs/guide/](https://netbsd.org/docs/guide/)
 - Ansible Documentation: [https://docs.ansible.com/](https://docs.ansible.com/)
 - Ansible Galaxy: [https://galaxy.ansible.com/](https://galaxy.ansible.com/)
+- Ansible BSD: [https://docs.ansible.com/ansible/latest/os_guide/intro_bsd.html](https://docs.ansible.com/ansible/latest/os_guide/intro_bsd.html)

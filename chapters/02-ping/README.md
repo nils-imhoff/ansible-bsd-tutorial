@@ -1,4 +1,4 @@
-# Exercise 02 - Ansible Ping Test
+# Chapter 02 - Ansible Ping Test
 
 Test Ansible connectivity to BSD systems using the ping module.
 

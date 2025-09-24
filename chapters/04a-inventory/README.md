@@ -1,4 +1,4 @@
-# Exercise 04 - Inventories
+# Chapter 04 - Inventories
 
 We start using inventories by creating a simple example inventory file
 

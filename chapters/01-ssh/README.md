@@ -1,16 +1,4 @@
-# Exercise 01 - SSH Connectivity to BSD Systems
-
-Test SSH connectivity to the BSD machines before starting Ansible automation.
-
-## Details
-
-In this exercise, we verify that we can log into the BSD systems (FreeBSD, OpenBSD, NetBSD) using SSH. This is a prerequisite for Ansible automation.
-
-## Preparation
-
-For these exercises, you work from the main directory of the repository.
-
-## Connection
+# Chapter 01 - SSH Connectivity to BSD Systems
 
 Test connectivity to FreeBSD system:
 

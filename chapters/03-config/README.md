@@ -1,4 +1,4 @@
-# Exercise 03 - Ansible Config file
+# Chapter 03 - Ansible Config file
 
 Ansible checks for configuration in the following order:
 

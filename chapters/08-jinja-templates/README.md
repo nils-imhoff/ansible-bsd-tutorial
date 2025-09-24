@@ -74,10 +74,10 @@ vim index.html.j2
 
 <html>
 <center>
-<h1>Der Computername von diesem System ist {{ ansible_hostname }}</h1>
-<h3>Das Betriebsystem von diesem Computer ist {{ ansible_os_family }}</h3>
-<small>Die Dateiversion ist {{ file_version }}<small>
-{# Dieser Eintrag wird nicht in der index-html Datei zu finden sein #}
+<h1>The hostname of this system is {{ ansible_hostname }}</h1>
+<h3>The operating system of this computer is {{ ansible_os_family }}</h3>
+<small>The file version is {{ file_version }}<small>
+{# This entry will not be found in the index-html file #}
 </center>
 </html>
 
