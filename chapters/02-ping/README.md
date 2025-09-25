@@ -9,7 +9,7 @@ In this exercise, we verify that Ansible can communicate with python. The `ping`
 ## Execution
 
 ```bash
-ansible localhost -m ping bsd_servers
+ansible localhost -m ping
 ```
 
 ```bash
