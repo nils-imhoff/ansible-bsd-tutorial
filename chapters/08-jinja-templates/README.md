@@ -5,7 +5,7 @@ mkdir -p ~/ansible/nginx
 cd ~/ansible/nginx
 
 - name: 'Manage nginx Deployment'
-  hosts: freebsd-hosts
+  hosts: freebsd_hosts
   become: true
   remote_user: ansible
   gather_facts: false
@@ -39,7 +39,7 @@ echo "a second page" > web/page2.html
 ls web
 
 - name: 'Configure Web Pages on BSD Systems'
-  hosts: freebsd-hosts
+  hosts: freebsd_hosts
   become: true
   remote_user: ansible
   gather_facts: false

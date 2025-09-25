@@ -36,7 +36,7 @@ vim loopdevice.yaml
 vim loopdevice.yaml
 
 - name: 'Manage Disk File'
-  hosts: freebsd-hosts
+  hosts: freebsd_hosts
   become: true
   remote_user: ansible
   gather_facts: false
